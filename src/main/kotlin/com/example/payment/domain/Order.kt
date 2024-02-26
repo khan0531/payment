@@ -13,6 +13,6 @@ class Order(
     var orderStatus: OrderStatus,
     val orderTitle: String,
     val orderAmount: Long,
-    var paidAmount: Long,
-    var refundedAmount: Long,
+    var paidAmount: Long = 0,
+    var refundedAmount: Long = 0,
 ) : BaseEntity()
