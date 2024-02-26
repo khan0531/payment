@@ -8,14 +8,15 @@ import java.time.LocalDateTime
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
-class BaseEntity {
+abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
     @CreatedDate
-    lateinit var createdAt:LocalDateTime
+    lateinit var createdAt: LocalDateTime
+
     @LastModifiedDate
-    lateinit var updatedAt:LocalDateTime
+    lateinit var updatedAt: LocalDateTime
 
 }
