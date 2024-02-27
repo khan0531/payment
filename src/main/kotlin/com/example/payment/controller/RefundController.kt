@@ -15,7 +15,7 @@ import java.time.LocalDateTime
 class RefundController(
     private val refundService: RefundService
 ) {
-    @PostMapping("/pay")
+    @PostMapping("/refund")
     fun pay(
         @Valid @RequestBody
         refundRequest: RefundRequest
