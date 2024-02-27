@@ -1,5 +1,7 @@
 package com.example.payment.controller
 
+import com.example.payment.service.PayServiceRequest
+import com.example.payment.service.PayServiceResponse
 import com.example.payment.service.PaymentService
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Min
@@ -19,17 +21,29 @@ class PaymentController(
     fun pay(
         @Valid @RequestBody
         payRequest: PayRequest
-    ): PayResponse {
-        return PayResponse("p1", 1000, "t1", LocalDateTime.now())
-    }
+    ): PayResponse = PayResponse.from(
+        paymentService.pay(
+            payRequest.toPayServiceRequest()
+        )
+    )
 }
 
 class PayResponse(
     val payUserId: String,
     val amount: Long,
     val transactionId: String,
-    val transacted: LocalDateTime,
-)
+    val transactedAt: LocalDateTime,
+) {
+    companion object {
+        fun from(response: PayServiceResponse) =
+            PayResponse(
+                payUserId = response.payUserId,
+                amount = response.amount,
+                transactionId = response.transactionId,
+                transactedAt = response.transactedAt
+            )
+    }
+}
 
 data class PayRequest(
     @field:NotBlank
@@ -40,4 +54,11 @@ data class PayRequest(
     val merchantTransactionId: String,
     @field:NotBlank
     val orderTitle: String,
-)
+) {
+    fun toPayServiceRequest() = PayServiceRequest(
+        payUserId = payUserId,
+        amount = amount,
+        merchantTransactionId = merchantTransactionId,
+        orderTitle = orderTitle
+    )
+}

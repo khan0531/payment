@@ -1,0 +1,11 @@
+### 결제 요청
+POST http://localhost:8090/api/v1/pay
+Content-Type: application/json
+
+{
+  "payUserId": "p1",
+  "amount": 1000,
+  "merchantTransactionId": "{{$uuid}}",
+  "orderTitle": "뾰족 구두"
+}
+

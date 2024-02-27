@@ -35,8 +35,7 @@ class PaymentService(
             PayServiceResponse(
                 payUserId = payServiceRequest.payUserId,
                 amount = payServiceRequest.amount,
-                transactionId = transactionId,
-                transacted = transactedAt
+                transactionId = transactionId
             )
         } catch (e: Exception) {
             // 실패 : 거래를 실패로 저장
@@ -54,7 +53,7 @@ data class PayServiceResponse(
     val payUserId: String,
     val amount: Long,
     val transactionId: String,
-    val transacted: LocalDateTime,
+    val transactedAt: LocalDateTime = LocalDateTime.now()
 )
 
 data class PayServiceRequest(

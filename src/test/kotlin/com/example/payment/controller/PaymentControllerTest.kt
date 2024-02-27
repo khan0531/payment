@@ -1,8 +1,10 @@
 package com.example.payment.controller
 
+import com.example.payment.service.PayServiceResponse
 import com.example.payment.service.PaymentService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,6 +13,7 @@ import org.springframework.http.MediaType
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
+import java.time.LocalDateTime
 
 @WebMvcTest(PaymentController::class)
 internal class PaymentControllerTest @Autowired constructor(
@@ -22,8 +25,17 @@ internal class PaymentControllerTest @Autowired constructor(
     private val mapper = ObjectMapper()
 
     @Test
-    fun payTest() {
+    fun 결제요청_성공() {
         //given
+        every {
+            paymentService.pay(any())
+        } returns PayServiceResponse(
+            payUserId = "p1",
+            amount = 200,
+            transactionId = "transactionId",
+            transactedAt = LocalDateTime.now()
+        )
+
         //when
         //then
         mockMvc.post("/api/v1/pay") {
@@ -42,8 +54,8 @@ internal class PaymentControllerTest @Autowired constructor(
         }.andExpect {
             status { isOk() }
             content { jsonPath("$.payUserId", equalTo("p1")) }
-            content { jsonPath("$.amount", equalTo(1000)) }
-            content { jsonPath("$.transactionId", equalTo("t1")) }
+            content { jsonPath("$.amount", equalTo(200)) }
+            content { jsonPath("$.transactionId", equalTo("transactionId")) }
         }.andDo { print() }
     }
 }
