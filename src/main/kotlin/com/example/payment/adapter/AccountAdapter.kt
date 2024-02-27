@@ -15,7 +15,26 @@ interface AccountAdapter {
     fun useAccount(
         @RequestBody useBalanceRequest: UseBalanceRequest
     ): UseBalanceResponse
+
+    @PostMapping("/transaction/cancel")
+    fun cancelUseAccount(
+        @RequestBody cancelBalanceRequest: CancelBalanceRequest
+    ): CancelBalanceResponse
 }
+
+data class CancelBalanceResponse(
+    val accountNumber: String,
+    val transactionResult: TransactionResultType,
+    val transactionId: String,
+    val amount: Long,
+    val transactedAt: LocalDateTime
+)
+
+data class CancelBalanceRequest(
+    val transactionId: String,
+    val accountNumber: String,
+    val amount: Long,
+)
 
 data class UseBalanceResponse(
     val accountNumber: String,
