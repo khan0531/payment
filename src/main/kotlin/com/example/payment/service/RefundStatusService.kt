@@ -100,19 +100,15 @@ class RefundStatusService(
             .filter { it.transactionStatus == SUCCESS }
             .sumOf { it.transactionAmount }
 
-    fun saveAsFailure(orderId: Long, errorCode: ErrorCode) {
-        val order: Order = getOrderByOrderId(orderId)
+    fun saveAsFailure(refundTxId: Long, errorCode: ErrorCode) {
+        val refundTransaction = orderTransactionRepository
+            .findById(refundTxId)
+            .orElseThrow { throw PaymentException(INTERNAL_SERVER_ERROR) }
             .apply {
-                orderStatus = FAILED
+                transactionStatus = FAILURE
+                failureCode = errorCode.name
+                description = errorCode.errorMessage
             }
-
-        val orderTransaction = getOrderTransactionByOrder(order).apply {
-            transactionStatus = FAILURE
-            failureCode = errorCode.name
-            description = errorCode.errorMessage
-        }
-
-
     }
 
     private fun getOrderTransactionByOrder(order: Order) =
